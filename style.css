@@ -218,3 +218,115 @@ button:active {
     font-weight: bold;
     cursor: pointer;
 }
+
+/* 右上角結算按鈕 */
+#scoreBtn {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    background: #f39c12;
+    color: white;
+    font-size: 20px;
+    padding: 10px 25px;
+    z-index: 50;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+#scoreBtn:hover {
+    background: #e67e22;
+}
+
+/* 結算彈窗背景 (黑色半透明) */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+/* 結算彈窗白色區塊 */
+.modal-content {
+    background: white;
+    padding: 30px 40px;
+    border-radius: 15px;
+    width: 700px; /* 👉 從 400px 加寬到 700px，容納左右兩欄 */
+    max-width: 95%;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+#scoreResult {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 設定為左右各佔 1 份寬度 */
+    gap: 20px; /* 左右與上下的間距 */
+    margin-bottom: 25px;
+}
+
+/* 各隊伍分數卡片 */
+.team-score {
+    text-align: left;
+    padding: 15px 20px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.team-score-title {
+    font-size: 24px;
+    font-weight: 900;
+    margin-bottom: 8px;
+}
+
+/* 虛線與總分 (模擬 ------------ 6分 效果) */
+.score-total {
+    display: block;
+    text-align: right;
+    font-size: 28px;
+    margin-top: 10px;
+    border-top: 3px dashed rgba(0, 0, 0, 0.3);
+    padding-top: 10px;
+}
+
+/* 各隊伍的專屬卡片配色 */
+.bg-red { background: #ffeaea; color: #c0392b; border: 2px solid #ff6666; }
+.bg-blue { background: #eaefff; color: #2980b9; border: 2px solid #6699ff; }
+.bg-yellow { background: #fffcea; color: #d35400; border: 2px solid #ffff66; }
+.bg-green { background: #eafaea; color: #27ae60; border: 2px solid #66cc66; }
+
+/* 彈窗內的按鈕排版 */
+.modal-buttons {
+    margin-top: 25px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.return-btn {
+    background: #7f8c8d;
+    color: white;
+    width: 45%;
+}
+
+.end-btn {
+    background: #e74c3c;
+    color: white;
+    width: 45%;
+}
