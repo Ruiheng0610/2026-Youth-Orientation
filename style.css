@@ -1,0 +1,220 @@
+body {
+    text-align: center;
+    font-family: "Microsoft JhengHei";
+}
+
+h1 {
+    font-size: 40px;
+}
+
+#map {
+    grid-column: 2; /* 強制鎖定在中間欄 */
+    margin: auto;
+    border-collapse: collapse;
+}
+
+#map td {
+    width: 110px;
+    height: 110px;
+    border: 3px solid black;
+    font-size: 25px;
+}
+
+#map th {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+}
+
+#buttonArea {
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.challengeText {
+    color: #e67e22;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.corner {
+    background: #ddd;
+}
+
+.red {
+    background: #ff6666;
+}
+
+.blue {
+    background: #6699ff;
+}
+
+.green {
+    background: #66cc66;
+}
+
+.yellow {
+    background: #ffff66;
+}
+
+.selectedCell {
+    animation: glow 1.5s infinite;
+}
+
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 10px orange;
+    }
+    50% {
+        box-shadow: 0 0 45px orange;
+    }
+    100% {
+        box-shadow: 0 0 10px orange;
+    }
+}
+
+.battleCell {
+    animation: battleGlow 1.2s infinite;
+}
+
+@keyframes battleGlow {
+    0% {
+        filter: brightness(100%);
+        box-shadow: 0 0 10px red;
+    }
+    50% {
+        filter: brightness(180%);
+        box-shadow: 0 0 40px red;
+    }
+    100% {
+        filter: brightness(100%);
+        box-shadow: 0 0 10px red;
+    }
+}
+
+#challengeBox {
+    margin: 20px;
+    padding: 20px;
+    font-size: 20px;
+    height: 100px; /* 固定高度 */
+    box-sizing: border-box;
+}
+
+#turnInfo .red {
+    color: #e74c3c;
+    background: none;
+}
+
+#turnInfo .blue {
+    color: #3498db;
+    background: none;
+}
+
+#turnInfo .green {
+    color: #27ae60;
+    background: none;
+}
+
+#turnInfo .yellow {
+    color: #f1c40f;
+    background: none;
+}
+
+button {
+    padding: 12px 35px;
+    margin: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 滑鼠移上 */
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* 按下 */
+button:active {
+    transform: scale(0.95);
+}
+
+/* 確認挑戰 */
+#confirmBtn {
+    background: #3498db;
+    color: white;
+}
+
+/* 成功 */
+#successBtn {
+    background: #2ecc71;
+    color: white;
+}
+/* 失敗 */
+#failBtn {
+    background: #e74c3c;
+    color: white;
+}
+
+#gameArea{
+    display: grid;
+    grid-template-columns: 1fr auto 1fr; /* 分成三欄：左邊留白、中間地圖、右邊轉盤 */
+    align-items: center;
+    justify-items: center;
+    width: 100%;
+    gap: 20px;
+}
+
+/* 左側閱讀面板 */
+#leftPanel {
+    grid-column: 1; /* 放進左側第一欄的 1fr 空間內 */
+    width: 95%;
+    max-width: 500px;
+    box-sizing: border-box;
+    justify-self: center; /* 在左側區塊內置中 */
+}
+
+#wheelArea {
+    grid-column: 3; /* 強制固定在右邊欄 */
+    text-align: center;
+}
+
+#spinBtn {
+    background: #9b59b6;
+    color: white;
+    font-size: 22px;
+}
+
+#wheelContainer {
+    position: relative;
+    width: 350px;
+    height: 390px;
+}
+
+#arrow {
+    position: absolute;
+    top: -20px;
+    left: 160px;
+    font-size: 40px;
+    color: red;
+    z-index: 10;
+}
+
+#wheel {
+    transition: transform 4s cubic-bezier(.17, .67, .12, .99);
+    border-radius: 50%;
+}
+
+/* 特殊對戰格（未占領前） */
+.specialCell {
+    background-color: #fff0f6;
+    color: #d63384;
+    font-weight: bold;
+    cursor: pointer;
+}

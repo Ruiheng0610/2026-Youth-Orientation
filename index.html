@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>迎新兵報到</title>
+
+        <link rel="stylesheet" href="style.css">
+
+    </head>
+
+    <body>
+
+
+        <h1>迎新兵報到</h1>
+
+
+        <div id="info">
+
+            <h2 id="turnInfo"></h2>
+
+            <div id="challengeBox">
+            請選擇要挑戰的格子
+            </div>
+
+            <div id="buttonArea">
+                <button id="confirmBtn" 
+                        onclick="confirmChallenge()" 
+                        style="display:none;">
+                確認
+                </button>
+
+
+                <button id="successBtn" 
+                        onclick="challengeResult(true)"
+                        style="display:none;">
+                成功
+                </button>
+
+
+                <button id="failBtn" 
+                        onclick="challengeResult(false)"
+                        style="display:none;">
+                失敗
+                </button>
+            </div>
+
+        </div>
+
+
+
+        <div id="gameArea">
+            <div id="leftPanel" style="display:none; text-align: left; padding: 30px; background: #fdf2e9; border: 4px solid #e67e22; border-radius: 15px; box-shadow: 0 6px 16px rgba(0,0,0,0.15);">
+                <h3 style="margin-top:0; color:#d35400; font-size:32px;">📜 挑戰閱讀區</h3>
+                <p id="readingText" style="font-size: 26px; line-height: 1.8; font-weight: bold; color: #333; white-space: pre-line;"></p>
+            </div>
+
+            <table id="map">
+
+            </table>
+
+            <div id="wheelArea" style="display:none;">
+                <div id="wheelContainer">
+                    <div id="arrow">
+                        ▼
+                    </div>
+                    <canvas id="wheel" width="350" height="350"></canvas>
+                </div>
+                <button id="spinBtn" onclick="spinWheel()">
+                    開始轉盤
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <script src="script.js"></script>
+
+    </body>
+
+</html>
