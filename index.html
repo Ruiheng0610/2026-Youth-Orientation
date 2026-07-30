@@ -10,7 +10,7 @@
     </head>
 
     <body>
-
+        <button id="scoreBtn" onclick="showScoreboard()">結算積分</button>
 
         <h1>迎新兵報到</h1>
 
@@ -47,8 +47,6 @@
 
         </div>
 
-
-
         <div id="gameArea">
             <div id="leftPanel" style="display:none; text-align: left; padding: 30px; background: #fdf2e9; border: 4px solid #e67e22; border-radius: 15px; box-shadow: 0 6px 16px rgba(0,0,0,0.15);">
                 <h3 style="margin-top:0; color:#d35400; font-size:32px;">📜 挑戰閱讀區</h3>
@@ -76,6 +74,20 @@
 
 
         <script src="script.js"></script>
+
+        <!-- 結算彈跳視窗 -->
+        <div id="scoreModal" class="modal-overlay" style="display:none;">
+            <div class="modal-content">
+                <h2>📊 遊戲結算排行榜 📊</h2>
+                <div id="scoreResult">
+                    <!-- 這裡會由 JS 動態塞入各隊分數 -->
+                </div>
+                <div class="modal-buttons">
+                    <button class="return-btn" onclick="closeScoreboard()">回到遊戲</button>
+                    <button class="end-btn" onclick="endGame()">結束遊戲</button>
+                </div>
+            </div>
+        </div>
 
     </body>
 
