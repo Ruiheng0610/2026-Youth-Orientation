@@ -352,7 +352,7 @@ function startSpecialBattleSelect(r, c, event) {
     battleTarget = [r, c];
 
     let cellName = `${String.fromCharCode(65 + c)}${r + 1}`;
-    let text = `是否爭奪四組PK格【${cellName}】？`;
+    let text = `是否開啟爭奪特殊格：${cellName}`;
     document.getElementById("challengeBox").innerHTML = text;
 
     let confirmBtn = document.getElementById("confirmBtn");
@@ -370,7 +370,7 @@ function confirmSpecialBattle() {
     selectedCell = null;
 
     let cell = map[r][c];
-    let text = `🔥 四組爭奪戰 🔥<br>固定項目：<span class="challengeText">${cell.fixedGame}</span><br><small>(獲勝隊伍將永久獲得此地！)</small>`;
+    let text = `挑戰內容：<span class="challengeText">${cell.fixedGame}</span><br><small>(獲勝隊伍將永久獲得此地！)</small>`;
     document.getElementById("challengeBox").innerHTML = text;
 
     document.getElementById("wheelArea").style.display = "none"; // 不需要轉盤
@@ -418,11 +418,15 @@ function restoreStandardButtons() {
 // 判斷附近是否有自己的格子
 function canAttack(r, c) {
     let team = teams[currentTeam].color;
-    let dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+    let dirs = [
+        [-1, 0], [1, 0], [0, -1], [0, 1],   // 上、下、左、右
+        [-1, -1], [-1, 1], [1, -1], [1, 1]  // 左上、右上、左下、右下
+    ];
 
     for (let d of dirs) {
         let nr = r + d[0];
         let nc = c + d[1];
+        // 確保沒有超出 5x5 的地圖邊界
         if (nr >= 0 && nr < 5 && nc >= 0 && nc < 5) {
             if (map[nr][nc].owner == team) return true;
         }
@@ -517,6 +521,76 @@ function updateTurn() {
     let team = teams[currentTeam];
     document.getElementById("turnInfo").innerHTML = `目前回合：
     <span class="${team.color}">${team.name}</span>`;
+}
+
+// =====================
+//     結算與計分系統
+// =====================
+
+// 打開結算看板
+function showScoreboard() {
+    let resultHTML = "";
+    let displayTeams = [teams[0], teams[1], teams[3], teams[2]];
+
+    // 巡迴四個隊伍算分數
+    displayTeams.forEach(team => {
+        let normalCount = 0;
+        let specialCount = 0;
+
+        // 掃描地圖上每一格
+        for (let r = 0; r < 5; r++) {
+            for (let c = 0; c < 5; c++) {
+                let cell = map[r][c];
+                
+                // 如果這格是該隊伍的
+                if (cell.owner === team.color) {
+                    if (cell.isSpecial) {
+                        specialCount++; // 四組對戰特殊格
+                    } else {
+                        normalCount++;  // 起始格或一般空白格
+                    }
+                }
+            }
+        }
+
+        // 計算總分
+        let totalScore = (normalCount * 1) + (specialCount * 3);
+        let bgClass = "bg-" + team.color;
+
+        // 組合顯示字串
+        resultHTML += `
+            <div class="team-score ${bgClass}">
+                <div class="team-score-title">${team.name}</div>
+                普通格: ${normalCount} 格 * 1 <br>
+                特殊格: ${specialCount} 格 * 3
+                <span class="score-total">${totalScore} 分</span>
+            </div>
+        `;
+    });
+
+    // 塞入 HTML 並顯示彈窗
+    document.getElementById("scoreResult").innerHTML = resultHTML;
+    document.getElementById("scoreModal").style.display = "flex";
+}
+
+// 關閉結算看板 (回到遊戲)
+function closeScoreboard() {
+    document.getElementById("scoreModal").style.display = "none";
+}
+
+// 結束遊戲
+function endGame() {
+    let confirmEnd = confirm("確定要結束遊戲嗎？\n按下確定後將會鎖定畫面。");
+    
+    if (confirmEnd) {
+        // 隱藏「回到遊戲」與「結算計分」按鈕
+        document.querySelector(".return-btn").style.display = "none";
+        document.querySelector(".end-btn").style.display = "none";
+        document.getElementById("scoreBtn").style.display = "none";
+
+        // 將標題改為最終結果
+        document.querySelector("#scoreModal h2").innerHTML = "🎉 遊戲最終結果 🎉";
+    }
 }
 
 init();
