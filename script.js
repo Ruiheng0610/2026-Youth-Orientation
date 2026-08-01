@@ -19,7 +19,7 @@ let isChallenging = false;
 let isBattling = false;
 let battleTarget = null;
 
-// 🎯 設定 C2, B3, D3, C4 四格的固定對戰遊戲
+// 設定 C2, B3, D3, C4 四格的固定對戰遊戲
 // 座標說明：C2=[1,2], B3=[2,1], D3=[2,3], C4=[3,2]
 const specialBattleCells = {
     "1,2": { name: "C2", game: "人體杯架" },
@@ -79,7 +79,8 @@ function init() {
                 challenge: challengeMap[r][c],
                 isSpecial: !!specialInfo,               // 是否為特殊四組對戰格
                 fixedGame: specialInfo ? specialInfo.game : null, // 固定對戰項目
-                locked: false                           // 是否永久鎖定
+                locked: false,                           // 是否永久鎖定
+                steppedBy: null
             };
         }
     }
@@ -131,6 +132,31 @@ function drawMap() {
             } else if (cell.isSpecial && !cell.owner) {
                 td.innerHTML = "⚔️"; // 爭奪中顯示雙刀
                 td.classList.add("specialCell");
+            }
+
+            if (cell.isSpecial && cell.steppedBy) {
+                // 設定相對定位，讓小徽章可以依照格子邊緣對齊，不會跑版
+                td.style.position = "relative";
+                
+                td.innerHTML += `
+                    <div class="${cell.steppedBy}" style="
+                        position: absolute;
+                        bottom: 2px;
+                        right: 2px;
+                        width: 22px;
+                        height: 22px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 50%;
+                        border: 2px solid rgba(255, 255, 255, 0.9);
+                        box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+                        font-size: 12px;
+                        z-index: 10;
+                    ">
+                        👣
+                    </div>
+                `;
             }
 
             td.onclick = (event) => clickCell(r, c, event);
@@ -217,7 +243,7 @@ function clickCell(r, c, event) {
         return;
     }
 
-    // ⚔️ 特殊對戰格（空白時觸發四組大亂鬥）
+    // 特殊對戰格（空白時觸發四組大亂鬥）
     if (cell.isSpecial) {
         startSpecialBattleSelect(r, c, event);
         return;
@@ -340,7 +366,7 @@ function confirmBattle() {
     if (selectedElement) selectedElement.classList.remove("battleCell");
 }
 
-// ⚔️ 選擇特殊四組對戰格
+// 選擇特殊四組對戰格
 function startSpecialBattleSelect(r, c, event) {
     if (selectedElement) {
         selectedElement.classList.remove("selectedCell");
@@ -361,7 +387,7 @@ function startSpecialBattleSelect(r, c, event) {
     confirmBtn.onclick = confirmSpecialBattle;
 }
 
-// ⚔️ 確認發動四組大亂鬥
+// 確認發動四組大亂鬥
 function confirmSpecialBattle() {
     if (battleTarget == null) return;
     let [r, c] = battleTarget;
@@ -394,12 +420,14 @@ function confirmSpecialBattle() {
     if (selectedElement) selectedElement.classList.remove("battleCell");
 }
 
-// ⚔️ 判定四組大亂鬥贏家
+// 判定四組大亂鬥贏家
 function winSpecialBattle(r, c, winningTeamIndex) {
     let winner = teams[winningTeamIndex];
+    let initiator = teams[currentTeam]; // 取得當前發動攻擊(踩格子)的隊伍
 
     map[r][c].owner = winner.color;
-    map[r][c].locked = true; // 🔒 永久鎖定此格！
+    map[r][c].locked = true; // 永久鎖定此格
+    map[r][c].steppedBy = initiator.color; // 紀錄這個特殊格是被誰踩的
 
     restoreStandardButtons();
     endTurnProcess(`${winner.name} 贏得了爭奪戰！該格子已被永久鎖定！`);
@@ -535,7 +563,8 @@ function showScoreboard() {
     // 巡迴四個隊伍算分數
     displayTeams.forEach(team => {
         let normalCount = 0;
-        let specialCount = 0;
+        let winSpecialCount = 0;     // 贏特殊格
+        let steppedSpecialCount = 0; // 踩特殊格
 
         // 掃描地圖上每一格
         for (let r = 0; r < 5; r++) {
@@ -545,16 +574,20 @@ function showScoreboard() {
                 // 如果這格是該隊伍的
                 if (cell.owner === team.color) {
                     if (cell.isSpecial) {
-                        specialCount++; // 四組對戰特殊格
+                        winSpecialCount++; // 四組對戰特殊格
                     } else {
                         normalCount++;  // 起始格或一般空白格
                     }
+                }
+
+                if (cell.isSpecial && cell.steppedBy === team.color) {
+                    steppedSpecialCount++;
                 }
             }
         }
 
         // 計算總分
-        let totalScore = (normalCount * 1) + (specialCount * 3);
+        let totalScore = (normalCount * 1) + (steppedSpecialCount * 1) + (winSpecialCount * 2);
         let bgClass = "bg-" + team.color;
 
         // 組合顯示字串
@@ -562,7 +595,8 @@ function showScoreboard() {
             <div class="team-score ${bgClass}">
                 <div class="team-score-title">${team.name}</div>
                 普通格: ${normalCount} 格 * 1 <br>
-                特殊格: ${specialCount} 格 * 3
+                踩特殊格: ${steppedSpecialCount} 格 * 1 <br>
+                贏特殊格: ${winSpecialCount} 格 * 2
                 <span class="score-total">${totalScore} 分</span>
             </div>
         `;
