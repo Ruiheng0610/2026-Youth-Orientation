@@ -24,7 +24,7 @@ let battleTarget = null;
 const specialBattleCells = {
     "1,2": { name: "C2", game: "人體杯架" },
     "2,1": { name: "B3", game: "地雷撲克牌" },
-    "2,3": { name: "D3", game: "粒粒皆辛苦" },
+    "2,3": { name: "D3", game: "敵不動我動" },
     "3,2": { name: "C4", game: "精準翻轉" }
 };
 
